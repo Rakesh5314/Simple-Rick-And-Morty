@@ -1,4 +1,4 @@
-package com.example.rickandmortybaseapp.component.Character
+package com.example.rickandmortybaseapp.component.character
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
