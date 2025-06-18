@@ -28,27 +28,26 @@ fun EpisodeRowComponent(episode: Episode){
                 description = episode.episodeNumber.toString()
             )
         )
-    }
+        Spacer(modifier = Modifier.width(64.dp))
 
-    Spacer(modifier = Modifier.width(64.dp))
+        Column {
+            Text(
+                text = episode.name,
+                fontSize = 24.sp,
+                color = RickTextPrimary,
+                textAlign = TextAlign.End,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-    Column {
-        Text(
-            text = episode.name,
-            fontSize = 24.sp,
-            color = RickTextPrimary,
-            textAlign = TextAlign.End,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Text(
-            text = episode.air_date,
-            fontSize = 24.sp,
-            color = RickTextPrimary,
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.End,
-            modifier =Modifier.fillMaxWidth()
-        )
+            Text(
+                text = episode.air_date,
+                fontSize = 24.sp,
+                color = RickTextPrimary,
+                fontStyle = FontStyle.Italic,
+                textAlign = TextAlign.End,
+                modifier =Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 

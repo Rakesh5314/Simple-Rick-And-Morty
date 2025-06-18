@@ -3,12 +3,15 @@ package com.example.network
 import com.example.network.model.domain.Character
 import com.example.network.model.domain.CharacterPage
 import com.example.network.model.domain.Episode
+import com.example.network.model.domain.EpisodePage
 import com.example.network.model.remote.RemoteCharacter
 import com.example.network.model.remote.RemoteCharacterPage
 import com.example.network.model.remote.RemoteEpisode
+import com.example.network.model.remote.RemoteEpisodePage
 import com.example.network.model.remote.toDomainCharacter
 import com.example.network.model.remote.toDomainCharacterPage
 import com.example.network.model.remote.toDomainEpisode
+import com.example.network.model.remote.toDomainEpisodePage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -80,6 +83,38 @@ class KtorClient {
                     .map { it.toDomainEpisode() }
             }
         }
+    }
+
+    suspend fun getEpisodeByPage(pageIndex : Int) : ApiOperation<EpisodePage>{
+        return safeApiCall {
+            client.get("episode"){
+                url {
+                    parameters.append("page", pageIndex.toString())
+                }
+            }
+                .body<RemoteEpisodePage>()
+                .toDomainEpisodePage()
+        }
+    }
+
+    suspend fun getAllEpisodes() : ApiOperation<List<Episode>>{
+        val data =  mutableListOf<Episode>()
+        var exception : Exception ?= null
+
+        getEpisodeByPage(pageIndex = 1).onSuccess { firstPage ->
+            val totalPageCount = firstPage.info.page
+            data.addAll(firstPage.episodes)
+
+            repeat(totalPageCount-1){index ->
+                getEpisodeByPage(index + 2).onSuccess {nextpage ->
+                    data.addAll(nextpage.episodes)
+                }.onFailure { error ->
+                    exception = error
+                }
+                if (exception == null) {return@onSuccess}
+            }
+        }.onFailure { exception = it }
+        return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
     }
 
     private inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
