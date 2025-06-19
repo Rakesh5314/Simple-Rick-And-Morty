@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -34,6 +35,7 @@ fun CharacterListItem(
 ){
     Row (
         modifier = modifier
+            .height(140.dp)
             .border(
                 width = 1.dp,
                 brush = Brush.horizontalGradient(listOf(Color.Transparent, RickAction)),

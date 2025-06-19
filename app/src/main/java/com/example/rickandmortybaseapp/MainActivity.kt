@@ -41,6 +41,7 @@ import com.example.rickandmortybaseapp.component.character.CharacterDetailScreen
 import com.example.rickandmortybaseapp.screen.AllEpisodeScreen
 import com.example.rickandmortybaseapp.screen.CharacterEpisodeScreen
 import com.example.rickandmortybaseapp.screen.HomeScreen
+import com.example.rickandmortybaseapp.screen.SearchScreen
 import com.example.rickandmortybaseapp.ui.theme.RickAction
 import com.example.rickandmortybaseapp.ui.theme.RickAndMortyBaseAppTheme
 import com.example.rickandmortybaseapp.ui.theme.RickPrimary
@@ -144,10 +145,9 @@ class MainActivity : ComponentActivity() {
                         composable(route = NavDetination.Search.route){
                             Column(
                                 modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
+
                             ) {
-                                Text(text = "Search" , fontSize = 62.sp , color = Color.White)
+                                SearchScreen()
                             }
                         }
                     }
