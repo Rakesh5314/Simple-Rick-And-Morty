@@ -1,5 +1,6 @@
 package com.example.rickandmortybaseapp.component.character
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +37,8 @@ import com.example.rickandmortybaseapp.components.DataPoint
 import com.example.rickandmortybaseapp.components.DataPointComponent
 import com.example.rickandmortybaseapp.repository.CharacterRepository
 import com.example.rickandmortybaseapp.ui.theme.RickAction
+import com.example.rickandmortybaseapp.ui.theme.RickPrimary
+import com.example.rickandmortybaseapp.ui.theme.RickTextPrimary
 import com.example.rickandmortybaseapp.viewModel.CharacterDetailViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,11 +48,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
-sealed interface CharacterDetailViewState{
+sealed interface CharacterDetailViewState {
     object Loading : CharacterDetailViewState
-    data class Error(val message : String) : CharacterDetailViewState
-    data class Success(val character : Character, val characterDataPoints : List<DataPoint>) :
+    data class Error(val message: String) : CharacterDetailViewState
+    data class Success(val character: Character, val characterDataPoints: List<DataPoint>) :
         CharacterDetailViewState
 }
 
@@ -57,7 +60,7 @@ fun CharacterDetailScreen(
     characterId: Int,
     viewModel: CharacterDetailViewModel = hiltViewModel(),
     onEpisodeClicked: (Int) -> Unit,
-    onBackClicked : () -> Unit
+    onBackClicked: () -> Unit
 ) {
     LaunchedEffect(
         key1 = Unit,
@@ -111,28 +114,28 @@ fun CharacterDetailScreen(
                     item { Spacer(modifier = Modifier.height(8.dp)) }
 
                     item {
-                        Button(onClick = {}) {
-                            Text(
-                                text = "View All episodes",
-                                color = RickAction,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .padding(horizontal = 32.dp)
-                                    .border(
-                                        width = 1.dp,
-                                        color = RickAction,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .clickable {
-                                        onEpisodeClicked(characterId)
-                                    }
-                                    .padding(vertical = 8.dp)
-                            )
-                        }
+                        Text(
+                            text = "View All episodes",
+                            color = RickTextPrimary,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(horizontal = 32.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = RickAction,
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable {
+                                    onEpisodeClicked(characterId)
+                                }
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth()
+                        )
                     }
                 }
+
                 is CharacterDetailViewState.Error -> {}
                 else -> {}
             }

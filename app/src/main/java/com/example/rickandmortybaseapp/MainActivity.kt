@@ -147,66 +147,15 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxSize(),
 
                             ) {
-                                SearchScreen()
+                                SearchScreen(
+                                    onCharacterClicked = {characterId ->
+                                        navController.navigate("character_details/$characterId")
+                                    }
+                                )
                             }
                         }
                     }
                 }
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = RickPrimary
-//                ) {
-//                    NavHost(navController = navController , startDestination = "home_screen"){
-//                        composable(route = "home_screen"){
-//                            HomeScreen(onCharacterSelected = { characterId ->
-//                                navController.navigate("character_details/$characterId")
-//                            })
-//                        }
-//                        composable(
-//                            route = "character_details/{characterId}",
-//                            arguments = listOf(navArgument("characterId"){
-//                                type = NavType.IntType
-//                            }
-//                        )
-//                        ){backStackEntry ->
-//                            val characterId : Int = backStackEntry.arguments?.getInt("characterId") ?: -1
-//                            CharacterDetailScreen(
-//                                characterId = characterId,
-//                                onEpisodeClicked = {
-//                                    navController.navigate("character_episodes/$it")
-//                                },
-//                                onBackClicked = {
-//                                    navController.navigateUp()
-//                                }
-//                            )
-//                        }
-//                        composable(
-//                            route = "character_episodes/{characterId}",
-//                            arguments = listOf(navArgument("characterId"){type = NavType.IntType})
-//                        ) { backStackEntry->
-//                            val characterId : Int = backStackEntry.arguments?.getInt("characterId") ?: -1
-//                            CharacterEpisodeScreen(characterId = characterId, ktorClient = ktorClient , onBackClicked = {navController.navigateUp()})
-//                        }
-//                        composable(route = NavDetination.Episode.route){
-//                            Column(
-//                                modifier = Modifier.fillMaxSize(),
-//                                verticalArrangement = Arrangement.Center,
-//                                horizontalAlignment = Alignment.CenterHorizontally
-//                            ) {
-//                                Text(text = "Episode" , fontSize = 62.sp , color = Color.White)
-//                            }
-//                        }
-//                        composable(route = NavDetination.Search.route){
-//                            Column(
-//                                modifier = Modifier.fillMaxSize(),
-//                                verticalArrangement = Arrangement.Center,
-//                                horizontalAlignment = Alignment.CenterHorizontally
-//                            ) {
-//                                Text(text = "Search" , fontSize = 62.sp , color = Color.White)
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
     }

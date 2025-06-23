@@ -17,7 +17,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.network.model.domain.Character
+import com.example.network.model.domain.CharacterStatus
 import com.example.rickandmortybaseapp.repository.CharacterRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 
 @HiltViewModel
@@ -35,7 +37,12 @@ class SearchViewModel @Inject constructor(
         object Empty : ScreenState
         object Searching : ScreenState
         data class Error(val message : String) : ScreenState
-        data class Content(val userQuery : String , val result : List<Character>) : ScreenState
+        data class Content(val userQuery : String , val result : List<Character> , val filterState : FilterState) : ScreenState{
+            data class FilterState(
+                val statuses : List<CharacterStatus>,
+                val selectedStatuses : List<CharacterStatus>
+            )
+        }
     }
 
     private val _uiState = MutableStateFlow<ScreenState>(ScreenState.Empty)
@@ -60,17 +67,38 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun toggleStatus(status : CharacterStatus){
+        _uiState.update {
+            val currentState = (it as? ScreenState.Content) ?: return@update it
+            val currentSelectedStatuses = currentState.filterState.selectedStatuses
+            val newStatus = if (currentSelectedStatuses.contains(status)){
+                currentSelectedStatuses - status
+            }else{
+                currentSelectedStatuses + status
+            }
+            return@update currentState.copy(
+                filterState = currentState.filterState.copy(selectedStatuses = newStatus)
+            )
+        }
+    }
+
     private fun searchAllCharacter(query : String) = viewModelScope.launch {
         _uiState.update { ScreenState.Searching }
+//        delay(4000)
         characterRepository.fetchAllCharacterByName(searchQuery = query).onSuccess { characters ->
+            val allStatuses = characters.map { it.status }.toSet().toList().sortedBy { it.status }
             _uiState.update {
                 ScreenState.Content(
                     userQuery = query,
-                    result = characters
+                    result = characters,
+                    filterState = ScreenState.Content.FilterState(
+                        statuses = allStatuses,
+                        selectedStatuses = allStatuses
+                    )
                 )
             }
         }.onFailure {exception ->
-            _uiState.update { ScreenState.Error(message = exception.message ?: "unknown error" ) }
+            _uiState.update { ScreenState.Error(message = "no search results found") }
         }
     }
 }
